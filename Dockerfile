@@ -1,0 +1,24 @@
+#docker build -t detect_bot:py3 .
+#docker run -it --gpus all -v .:/app -v ../storage:/storage --name detect_bot detect_bot:py3 bash
+
+FROM python:3.10
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y locales locales-all
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+ARG BOT_STORAGE_ROOT=/storage
+ENV BOT_MODELS_ROOT=$BOT_STORAGE_ROOT/models
+ENV BOT_DATA_ROOT=$BOT_STORAGE_ROOT/data
+ENV ENVIRONMENT=local
+
+RUN apt update && \
+    apt install -y --no-install-recommends nano wget
+
+WORKDIR /app
+
+RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics
