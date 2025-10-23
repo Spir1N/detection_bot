@@ -1,10 +1,19 @@
-import aiohttp
+import aiohttp, os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
+from aiogram.types import BufferedInputFile
 from io import BytesIO
 import binascii
 
-BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+with open('bot/.secret', 'r') as fh:
+    vars_dict = dict(
+        tuple(line.replace('\n', '').split('='))
+        for line in fh.readlines() if not line.startswith('#')
+    )
+
+os.environ.update(vars_dict)
+
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 API_URL = "http://127.0.0.1:8000/process/"
 
 bot = Bot(token=BOT_TOKEN)
@@ -30,5 +39,5 @@ async def handle_image(message: types.Message):
         async with session.post(API_URL, data=form) as resp:
             data = await resp.json()
             result_bytes = binascii.unhexlify(data["result"])
-            output_image = BytesIO(result_bytes)
-            await message.answer_photo(photo=output_image, caption="Вот результат обработки ✅")
+            output_file = BufferedInputFile(result_bytes, filename="processed.jpg")
+            await message.answer_photo(photo=output_file, caption="Вот результат обработки ✅")

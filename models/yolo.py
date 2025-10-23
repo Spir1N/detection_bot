@@ -1,11 +1,14 @@
-from ultralytics import YOLO
-import cv2, random
+import cv2
+import io
 from typing import Any
 import numpy as np
+from PIL import Image
 
-def yolo_detect(image_bytes: str, model: Any, color: list[list[int]]) -> np.ndarray:
-    image = cv2.imread(image_bytes)
-    results = model.predict(source=image)
+def yolo_detect(image_bytes: str, model: Any, colors: list[list[int]]) -> np.ndarray:
+    image = Image.open(io.BytesIO(image_bytes))
+    image = np.array(image)
+    cv2.imwrite("input.png", image)
+    results = model.predict(image, conf=0.1)
     for result in results:
         boxes = result.boxes
         for box in boxes:
@@ -19,8 +22,11 @@ def yolo_detect(image_bytes: str, model: Any, color: list[list[int]]) -> np.ndar
             (text_width, text_height), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 1)
             cv2.rectangle(image, (x1, y1 - text_height - 14), (x1 + text_width, y1), color, -1)
             cv2.putText(image, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
-
+    print(image)
     cv2.imwrite("output.png", image)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = Image.fromarray(image)
 
-    return image
+    output_buffer = io.BytesIO()
+    image.save(output_buffer, format="JPEG")
+    return output_buffer.getvalue()
