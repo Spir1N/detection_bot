@@ -16,9 +16,10 @@ ENV BOT_DATA_ROOT=$BOT_STORAGE_ROOT/data
 ENV ENVIRONMENT=local
 
 RUN apt update && \
-    apt install -y --no-install-recommends nano wget
+    apt install -y --no-install-recommends nano wget \
+    apt-get install ffmpeg libsm6 libxext6  -y
 
 WORKDIR /app
 
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
-RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics
+RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics python-multipart opencv-python
