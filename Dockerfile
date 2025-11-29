@@ -15,6 +15,13 @@ ENV BOT_MODELS_ROOT=$BOT_STORAGE_ROOT/models
 ENV BOT_DATA_ROOT=$BOT_STORAGE_ROOT/data
 ENV ENVIRONMENT=local
 
+ENV TORCH_HOME=$BOT_STORAGE_ROOT/data/cached_models/torch
+ENV HF_HOME=$BOT_STORAGE_ROOT/data/cached_models/hf
+ENV HUGGINGFACE_HUB_CACHE=$BOT_STORAGE_ROOT/data/cached_models/hf/hub
+ENV TRANSFORMERS_CACHE=$BOT_STORAGE_ROOT/data/cached_models/hf/transformers
+ENV SENTENCE_TRANSFORMERS_HOME=$BOT_STORAGE_ROOT/data/cached_models/sentence-transformers
+ENV TIMM_HOME=$BOT_STORAGE_ROOT/data/cached_models/timm
+
 RUN apt update && \
     apt install -y --no-install-recommends nano wget \
     apt-get install ffmpeg libsm6 libxext6  -y
