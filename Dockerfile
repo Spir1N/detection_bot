@@ -22,4 +22,4 @@ RUN apt update && \
 WORKDIR /app
 
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
-RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics python-multipart opencv-python pandas
+RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics python-multipart opencv-python pandas tqdm torchmetrics transformers
