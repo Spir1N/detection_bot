@@ -14,6 +14,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from create_dataset import create_faster_rcnn_dataset
 
 NUM_EPOCHS = 2
+MODELS_ROOT = Path(os.getenv("BOT_STORAGE_ROOT"))
 OUTPUT_PATH = Path("output")
 OUTPUT_FILE_NAME = "results.json"
 TRAINING_MONITORING = True
@@ -200,7 +201,8 @@ for epoch in range(num_epochs):
 
     lr_scheduler.step()
 
-torch.save(model.state_dict(), output_path / 'faster_rcnn_pascal_voc.pth')
+os.makedirs(MODELS_ROOT / "faster_rcnn")
+torch.save(model.state_dict(), MODELS_ROOT / "faster_rcnn" / 'faster_rcnn_pascal_voc.pth')
 
 with open(output_path / output_file_name, "w", encoding="utf-8") as f:
     json.dump(result_metrics, f, indent=4)
