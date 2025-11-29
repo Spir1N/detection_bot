@@ -1,6 +1,10 @@
+import os
+import shutil
 import pandas as pd
 import matplotlib.pyplot as plt
 from ultralytics import YOLO
+
+MODELS_ROOT = Path(os.getenv("BOT_STORAGE_ROOT"))
 
 model = YOLO("yolo11n.pt")
 results = model.train(data="VOC.yaml", epochs=40, imgsz=640)
@@ -16,3 +20,6 @@ plt.title("mAP50 during training")
 plt.legend()
 plt.grid()
 plt.show()
+
+os.makedirs(MODELS_ROOT / "yolo")
+shutil.move("runs/detect/train/weights/best.pt", MODELS_ROOT / "yolo")
