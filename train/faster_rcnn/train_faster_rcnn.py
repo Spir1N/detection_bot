@@ -14,7 +14,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from create_dataset import create_faster_rcnn_dataset
 
 NUM_EPOCHS = 2
-MODELS_ROOT = Path(os.getenv("BOT_STORAGE_ROOT"))
+MODELS_ROOT = Path(os.getenv("BOT_MODELS_ROOT"))
 OUTPUT_PATH = Path("output")
 OUTPUT_FILE_NAME = "results.json"
 TRAINING_MONITORING = True
@@ -118,14 +118,14 @@ def validate(model, dataloader, device):
 
     return map50, map50_95, precision, recall
 
-device = torch.device("cuda" if torch.cuda.is_available() else 'cpu')
-model = create_model(num_classes=21).to(device)
-
 num_epochs = NUM_EPOCHS
 output_path = OUTPUT_PATH
 output_file_name = OUTPUT_FILE_NAME
 training_monitoring = TRAINING_MONITORING
 batch_size = BATCH_SIZE
+
+device = torch.device("cuda" if torch.cuda.is_available() else 'cpu')
+model = create_model(num_classes=21).to(device)
 
 train_transform = transforms.Compose([
     transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
@@ -144,8 +144,7 @@ val_transform = transforms.Compose([
 script_path = "./download_voc.sh"
 data_dir = "datasets/VOCdevkit"
 save_dir = "datasets/VOC"
-# create_faster_rcnn_dataset(script_path, data_dir, save_dir)
-os.makedirs(output_path, exist_ok=True)
+create_faster_rcnn_dataset(script_path, data_dir, save_dir)
 
 path = Path("Faster_RCNN_Dataset")
 train_dataset = PascalVoc(path, mode="train", transform=train_transform)
@@ -180,9 +179,9 @@ for epoch in range(num_epochs):
     metrics = {}
     print(f'Epoch {epoch+1}/{num_epochs}')
 
-    # train_loss = train_epoch(model, train_loader, optimizer, device)
-    # if training_monitoring:
-    #     print(f'Train Loss: {train_loss:.4f}')
+    train_loss = train_epoch(model, train_loader, optimizer, device)
+    if training_monitoring:
+        print(f'Train Loss: {train_loss:.4f}')
 
     epoch_metrics = validate(model, val_loader, device)
     if training_monitoring:
@@ -196,14 +195,15 @@ for epoch in range(num_epochs):
     metrics["mAP50-95"] = epoch_metrics[1]
     metrics["Precision"] = epoch_metrics[2]
     metrics["Recall"] = epoch_metrics[3]
-    # metrics["Loss"] = train_loss
+    metrics["Loss"] = train_loss
     result_metrics.append(metrics)
 
     lr_scheduler.step()
 
-os.makedirs(MODELS_ROOT / "faster_rcnn")
+os.makedirs(MODELS_ROOT / "faster_rcnn", exist_ok=True)
 torch.save(model.state_dict(), MODELS_ROOT / "faster_rcnn" / 'faster_rcnn_pascal_voc.pth')
 
+os.makedirs(output_path, exist_ok=True)
 with open(output_path / output_file_name, "w", encoding="utf-8") as f:
     json.dump(result_metrics, f, indent=4)
 
