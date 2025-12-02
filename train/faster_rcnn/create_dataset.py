@@ -1,4 +1,6 @@
-import shutil, subprocess, os
+import os
+import shutil
+import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from PIL import Image
@@ -16,7 +18,7 @@ def download_data(script_path):
     
     print("Uploading a dataset...")
     os.chmod(script_path, 0o755)
-    result = subprocess.run(['bash', script_path])
+    subprocess.run(['bash', script_path])
     print("Dataset is loaded")
 
 def convert_bbox_voc_to_yolo(size, box):
