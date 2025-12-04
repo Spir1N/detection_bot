@@ -22,11 +22,12 @@ def yolo_detect(image_bytes: str, model: Any, colors: list[list[int]]) -> np.nda
             (text_width, text_height), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 1)
             cv2.rectangle(image, (x1, y1 - text_height - 14), (x1 + text_width, y1), color, -1)
             cv2.putText(image, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
-    print(image)
+
     cv2.imwrite("output.png", image)
     # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = Image.fromarray(image)
 
     output_buffer = io.BytesIO()
     image.save(output_buffer, format="JPEG")
+    
     return output_buffer.getvalue()

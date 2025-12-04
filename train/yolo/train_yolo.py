@@ -2,6 +2,7 @@ import os
 import shutil
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 from ultralytics import YOLO
 
 MODELS_ROOT = Path(os.getenv("BOT_STORAGE_ROOT"))
@@ -22,4 +23,4 @@ plt.grid()
 plt.show()
 
 os.makedirs(MODELS_ROOT / "yolo")
-shutil.move("runs/detect/train/weights/best.pt", MODELS_ROOT / "yolo")
+shutil.move("runs/detect/train/weights/best.pt", MODELS_ROOT / "yolo" / "yolo.pt")
