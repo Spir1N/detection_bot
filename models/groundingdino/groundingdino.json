@@ -1,0 +1,55 @@
+{
+  "1": {
+    "inputs": {
+      "image": "01a0d2e787023cd1d4adcd1bfcd20e7b.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "2": {
+    "inputs": {
+      "model": "MM-GroundingDINO: Large All Datasets (60.3 mAP)"
+    },
+    "class_type": "GroundingModelLoader",
+    "_meta": {
+      "title": "Grounding Model (down)Loader"
+    }
+  },
+  "4": {
+    "inputs": {
+      "prompt": "coach",
+      "confidence_threshold": 0.3,
+      "single_box_mode": false,
+      "single_box_per_prompt_mode": true,
+      "bbox_output_format": "list_only",
+      "seed": 2128893207,
+      "text_threshold": 0.25,
+      "model": [
+        "2",
+        0
+      ],
+      "image": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "GroundingDetector",
+    "_meta": {
+      "title": "Grounding Detector"
+    }
+  },
+  "save_image_websocket_node": {
+    "inputs": {
+      "images": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "SaveImageWebsocket",
+    "_meta": {
+      "title": "SaveImageWebsocket"
+    }
+  }
+}
