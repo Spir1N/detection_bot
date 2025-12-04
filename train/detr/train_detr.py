@@ -19,7 +19,7 @@ OUTPUT_PATH = Path("output")
 OUTPUT_FILE_NAME = "results.json"
 TRAINING_MONITORING = True
 BATCH_SIZE = 8
-PRETRAINED = False
+PRETRAINED = True
 VOC_CLASSES = [
     "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair",
     "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant",
@@ -224,8 +224,9 @@ output_file_name = OUTPUT_FILE_NAME
 batch_size = BATCH_SIZE
 pretrained = PRETRAINED
 
-script_path = "./download_voc.sh"
-# create_dataset(script_path)
+if not os.path.exists("datasets"):
+    script_path = "./download_voc.sh"
+    create_dataset(script_path)
 
 data_dir = "./datasets/data" 
 train_dataset = datasets.VOCDetection(
@@ -257,14 +258,13 @@ best_val_loss = float('inf')
 best_model_path = MODELS_ROOT / "detr" / "best_detr_voc.pth"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = DetrForObjectDetection.from_pretrained(
+    "facebook/detr-resnet-50",
+    num_labels=len(VOC_CLASSES),
+    ignore_mismatched_sizes=True
+).to(device)
 if pretrained:
-    model =  torch.load(best_model_path)
-else:
-    model = DetrForObjectDetection.from_pretrained(
-        "facebook/detr-resnet-50",
-        num_labels=len(VOC_CLASSES),
-        ignore_mismatched_sizes=True
-    ).to(device)
+    model.load_state_dict(torch.load(best_model_path, weights_only=True))
 
 optimizer = optim.AdamW(model.parameters(), lr=1e-5, weight_decay=1e-4)
 scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
@@ -279,8 +279,6 @@ for epoch in range(num_epochs):
     print(f'Epoch {epoch+1}/{num_epochs}')
 
     train_loss = train(model, train_loader, optimizer, device)
-    print(f'Train Loss: {train_loss:.4f}')
-
     map50, map50_95, avg_val_loss = validate(model, val_loader, device)
     val_losses.append(avg_val_loss)
 
