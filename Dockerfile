@@ -23,10 +23,10 @@ ENV SENTENCE_TRANSFORMERS_HOME=$BOT_STORAGE_ROOT/data/cached_models/sentence-tra
 ENV TIMM_HOME=$BOT_STORAGE_ROOT/data/cached_models/timm
 
 RUN apt update && \
-    apt install -y --no-install-recommends nano wget \
-    apt-get install ffmpeg libsm6 libxext6  -y
+    apt install -y --no-install-recommends nano wget
+RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 WORKDIR /app
 
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
-RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics python-multipart opencv-python pandas tqdm torchmetrics transformers
+RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics python-multipart opencv-python pandas tqdm torchmetrics transformers websocket-client requests_toolbelt
