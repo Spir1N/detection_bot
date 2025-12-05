@@ -2,7 +2,6 @@ import aiohttp, os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
 from aiogram.types import BufferedInputFile
-from io import BytesIO
 import binascii
 
 with open('bot/.secret', 'r') as fh:
