@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from ultralytics import YOLO
 
-MODELS_ROOT = Path(os.getenv("BOT_STORAGE_ROOT"))
+MODELS_ROOT = Path(os.getenv("BOT_MODELS_ROOT"))
 
-model = YOLO("yolo11n.pt")
-results = model.train(data="VOC.yaml", epochs=40, imgsz=640)
+model = YOLO("yolo11m.yaml")
+results = model.train(data="VOC.yaml", epochs=40, imgsz=640, batch=32)
 
 results_csv = "runs/detect/train/results.csv"
 df = pd.read_csv(results_csv)
