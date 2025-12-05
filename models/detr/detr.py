@@ -27,6 +27,10 @@ def get_detr_model(best_model_path, device):
     model.eval() 
     return model, image_processor
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+best_model_path = MODELS_ROOT / "detr" / "best_detr_voc.pth"
+MODEL, PROCESSOR = get_detr_model(best_model_path, device)
+
 def infer_image(model, processor, image_bytes, score_threshold=0.5, device="cpu"):
     image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     orig_w, orig_h = image.size
@@ -90,14 +94,9 @@ def draw_boxes(image, boxes, labels, scores, output_path="result.jpg"):
     return output_buffer.getvalue()
 
 def detr_detect(image_bytes):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    best_model_path = MODELS_ROOT / "detr" / "best_detr_voc.pth"
-    model, processor = get_detr_model(best_model_path, device)
     boxes, labels, scores, img = infer_image(
-        model, processor,
-        image_bytes=image_bytes,
+        MODEL, PROCESSOR, image_bytes,
         score_threshold=0.5,
         device=device
     )
-
-    return draw_boxes(img, boxes, labels, scores, output_path="predicted.jpg")
+    return draw_boxes(img, boxes, labels, scores)
