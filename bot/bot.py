@@ -71,7 +71,7 @@ async def handle_all(message: types.Message):
         return
 
     if not message.photo:
-        await message.answer("Пожалуйста, отправь изображение")
+        await message.answer("Пожалуйста, отправь изображение или введи /model для смены модели детекции.")
         return
 
     model = state["model"] if state else "yolo"
