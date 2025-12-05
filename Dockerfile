@@ -29,4 +29,4 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 WORKDIR /app
 
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
-RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics python-multipart opencv-python pandas tqdm torchmetrics transformers websocket-client requests_toolbelt
+RUN pip install aiogram fastapi uvicorn aiohttp pillow ultralytics python-multipart opencv-python pandas tqdm torchmetrics transformers websocket-client requests_toolbelt timm
