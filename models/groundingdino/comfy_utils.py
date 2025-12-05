@@ -1,4 +1,3 @@
-import cv2
 import json
 import urllib.request
 import numpy as np

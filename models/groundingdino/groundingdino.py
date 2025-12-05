@@ -1,6 +1,5 @@
 import os
 import io
-import cv2
 import json
 import uuid
 import numpy as np
@@ -46,7 +45,7 @@ def groundingdino_detect(image_bytes, description):
     client_id = uuid.uuid4()
     with comfy_ws(comfyui_address, client_id) as ws:
         image = get_bboxes(image_bytes, ws, client_id, comfyui_address, description)
-    
+        
     image = Image.fromarray(image)
     output_buffer = io.BytesIO()
     image.save(output_buffer, format="JPEG")
