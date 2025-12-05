@@ -8,7 +8,7 @@ def yolo_detect(image_bytes: str, model: Any, colors: list[list[int]]) -> np.nda
     image = Image.open(io.BytesIO(image_bytes))
     image = np.array(image)
     cv2.imwrite("input.png", image)
-    results = model.predict(image, conf=0.1)
+    results = model.predict(image, conf=0.2)
     for result in results:
         boxes = result.boxes
         for box in boxes:
