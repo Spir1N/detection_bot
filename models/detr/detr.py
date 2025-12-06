@@ -85,12 +85,8 @@ def draw_boxes(image, boxes, labels, scores, output_path="result.jpg"):
         draw.rectangle([x1, y1 - text_h, x1 + text_w, y1], fill=color)
         draw.text((x1, y1 - text_h), text, fill="black", font=font)
 
-    image.save(output_path)
     output_buffer = io.BytesIO()
     image.save(output_buffer, format="JPEG")
-
-    print(f"Saved result to: {output_path}")
-
     return output_buffer.getvalue()
 
 def detr_detect(image_bytes):
